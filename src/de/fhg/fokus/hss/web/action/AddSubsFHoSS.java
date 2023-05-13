@@ -82,6 +82,7 @@ class AddSubsFHoSS {
             else
                 impi.setK(secretKey.getBytes());
             impi.setAuth_scheme(auth_scheme);
+            impi.setIp("");
             impi.setAmf(HexCodec.decode(amf));
             impi.setOp(HexCodec.decode(op));
             impi.setOpc(HexCodec.decode(opc));
