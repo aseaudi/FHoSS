@@ -105,47 +105,7 @@ class AddSubsFHoSS {
 
     public static int createIMPU(String[] args) {
         return 0;
-        int id = 0;
-        boolean dbException = false;
-        try{
-            Session session = HibernateUtil.getCurrentSession();
-            HibernateUtil.beginTransaction();
-            int auth_scheme = 255;
-            IMPI impi;
-            String identity = args[0] + "@ims.mnc001.mcc001.3ppnetwork.org";
-            String secretKey = args[3];
-            String amf = args[4];
-            String op = args[5];
-            String opc = args[6];
-            impi = new IMPI();
-            impi.setZh_default_auth_scheme(CxConstants.Auth_Scheme_AKAv1);
-            impi.setZh_key_life_time(ZhConstants.Default_Key_Life_Time);
-            impi.setZh_uicc_type(ZhConstants.UICC_Type_Basic_GBA);
-            impi.setIdentity(identity);
-            if (secretKey.length()==32) 
-                impi.setK(HexCodec.decode(secretKey));
-            else
-                impi.setK(secretKey.getBytes());
-            impi.setAuth_scheme(auth_scheme);
-            impi.setAmf(HexCodec.decode(amf));
-            impi.setOp(HexCodec.decode(op));
-            impi.setOpc(HexCodec.decode(opc));
-            IMPI_DAO.insert(session, impi);
-            id = impi.getId();
-            System.out.println("Added IMPI: " + args[0]); 
-        }                
-        catch (HibernateException e){
-            logger.error("Hibernate Exception occured!\nReason:" + e.getMessage());
-            e.printStackTrace();
-            dbException = true;
-        }
-        finally{
-            if (!dbException){
-                HibernateUtil.commitTransaction();
-            }
-            HibernateUtil.closeSession();
-        }
-        return id;
+        
     }
 }
 
