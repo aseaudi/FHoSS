@@ -29,7 +29,7 @@ class AddSubsFHoSS {
         System.out.println("Added Subscriber: " + args[0]); 
     }
     public static int createIMSU(String[] args) {
-        int id = 0;
+        int id = -1;
         boolean dbException = false;
         try{
             Session session = HibernateUtil.getCurrentSession();
@@ -60,7 +60,7 @@ class AddSubsFHoSS {
     }
 
     public static int createIMPI(String[] args) {
-        int id = 0;
+        int id = -1;
         boolean dbException = false;
         try{
             Session session = HibernateUtil.getCurrentSession();
@@ -85,9 +85,13 @@ class AddSubsFHoSS {
             impi.setAmf(HexCodec.decode(amf));
             impi.setOp(HexCodec.decode(op));
             impi.setOpc(HexCodec.decode(opc));
+            impi.setSqn("000000000000");
+            impi.setId_imsu(-1);
+            impi.setDefault_auth_scheme(1);
+            impi.setLine_identifier("");
             IMPI_DAO.insert(session, impi);
             id = impi.getId();
-            System.out.println("Added IMPI: " + args[0]); 
+            System.out.println("Added IMPI: " + identity); 
         }                
         catch (HibernateException e){
             logger.error("Hibernate Exception occured!\nReason:" + e.getMessage());
