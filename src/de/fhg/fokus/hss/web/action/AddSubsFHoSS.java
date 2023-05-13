@@ -21,6 +21,10 @@ import de.fhg.fokus.hss.web.form.IMPI_Form;
 import de.fhg.fokus.hss.web.util.WebConstants;
 import de.fhg.fokus.hss.zh.ZhConstants;
 
+// $JAVA_HOME/bin/java -cp $CLASSPATH de.fhg.fokus.hss.web.action.AddSubsFHoSS <id> <k> <amf> <op> <opc> <domain> <msisdn>
+
+// $JAVA_HOME/bin/java -cp $CLASSPATH de.fhg.fokus.hss.web.action.AddSubsFHoSS 001010000000001 00000001 ims.mnc001.mcc001.3ggnetwork.org fec86ba6eb707ed08905757b1bb44b8f 8000 00000000000000000000000000000000 c42449363bbad02b66d16bc975d77cc1
+
 class AddSubsFHoSS {
     private static Logger logger = Logger.getLogger(AddSubsFHoSS.class);
     public static void main(String[] args) {
@@ -29,8 +33,7 @@ class AddSubsFHoSS {
         int ipmi_id = createIMPI(args);
         int impu1_id = createIMPU(args, "sip:" + args[0]);
         int impu2_id = createIMPU(args, "sip:" + args[0].substring(5));
-        int impu3_id = createIMPU(args, "tel:" + args[8]);
-        System.out.println("Added Subscriber: " + args[0]); 
+        int impu3_id = createIMPU(args, "tel:" + args[1]);
     }
     public static int createIMSU(String[] args) {
         int id = -1;
@@ -43,8 +46,8 @@ class AddSubsFHoSS {
             imsu.setName(args[0]);
             imsu.setDiameter_name("");
             imsu.setScscf_name("");
-            imsu.setId_capabilities_set(Integer.parseInt(args[1]));
-            imsu.setId_preferred_scscf_set(Integer.parseInt(args[2]));
+            imsu.setId_capabilities_set(1);
+            imsu.setId_preferred_scscf_set(1);
             IMSU_DAO.insert(session, imsu);
             id = imsu.getId();
             System.out.println("Added IMSU: " + args[0]); 
@@ -71,7 +74,7 @@ class AddSubsFHoSS {
             HibernateUtil.beginTransaction();
             int auth_scheme = 255;
             IMPI impi;
-            String identity = args[0] + "@" + args[7];
+            String identity = args[0] + "@" + args[2];
             String secretKey = args[3];
             String amf = args[4];
             String op = args[5];
@@ -119,7 +122,7 @@ class AddSubsFHoSS {
             Session session = HibernateUtil.getCurrentSession();
             HibernateUtil.beginTransaction();
             IMPU impu = null;
-            String identity = impu_id + "@" + args[7];
+            String identity = impu_id + "@" + args[2];
             impu = new IMPU();
             impu.setIdentity(identity);
             impu.setBarring(1);
