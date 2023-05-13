@@ -27,7 +27,9 @@ class AddSubsFHoSS {
         System.out.println("Adding Subscribers to FHoSS ..."); 
         int imsu_id = createIMSU(args);
         int ipmi_id = createIMPI(args);
-        int impu_id = createIMPU(args);
+        int impu1_id = createIMPU(args, args[0]);
+        int impu2_id = createIMPU(args, args[0].substring(5));
+        int impu3_id = createIMPU(args, args[8]);
         System.out.println("Added Subscriber: " + args[0]); 
     }
     public static int createIMSU(String[] args) {
@@ -69,7 +71,7 @@ class AddSubsFHoSS {
             HibernateUtil.beginTransaction();
             int auth_scheme = 255;
             IMPI impi;
-            String identity = args[0] + "@ims.mnc001.mcc001.3ppnetwork.org";
+            String identity = args[0] + args[7];
             String secretKey = args[3];
             String amf = args[4];
             String op = args[5];
@@ -110,14 +112,14 @@ class AddSubsFHoSS {
         return id;
     }
 
-    public static int createIMPU(String[] args) {
+    public static int createIMPU(String[] args, String impu_id) {
         int id = -1;
         boolean dbException = false;
         try{
             Session session = HibernateUtil.getCurrentSession();
             HibernateUtil.beginTransaction();
             IMPU impu = null;
-            String identity = "sip:" + args[0] + "@ims.mnc001.mcc001.3ppnetwork.org";
+            String identity = "sip:" + impu_id + args[7];
             impu = new IMPU();
             impu.setIdentity(identity);
             impu.setBarring(1);
