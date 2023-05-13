@@ -20,6 +20,8 @@ class AddSubsFHoSS {
             IMSU imsu = null;
             imsu = new IMSU();
             imsu.setName(args[0]);
+            imsu.setDiameter_name("");
+            imsu.setScscf_name("");
             imsu.setId_capabilities_set(Integer.parseInt(args[1]));
             imsu.setId_preferred_scscf_set(Integer.parseInt(args[2]));
             IMSU_DAO.insert(session, imsu);
