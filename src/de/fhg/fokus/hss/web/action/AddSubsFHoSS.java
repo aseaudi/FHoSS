@@ -11,9 +11,11 @@ import de.fhg.fokus.hss.db.hibernate.*;
 import de.fhg.fokus.hss.auth.HexCodec;
 import de.fhg.fokus.hss.cx.CxConstants;
 import de.fhg.fokus.hss.db.model.IMPU;
+import de.fhg.fokus.hss.db.model.IMPU_VisitedNetwork;
 import de.fhg.fokus.hss.db.model.CxEvents;
 import de.fhg.fokus.hss.db.op.IMPI_IMPU_DAO;
 import de.fhg.fokus.hss.db.op.IMPU_DAO;
+import de.fhg.fokus.hss.db.op.IMPU_VisitedNetwork_DAO;
 import de.fhg.fokus.hss.db.op.CxEvents_DAO;
 import de.fhg.fokus.hss.web.form.IMPI_Form;
 import de.fhg.fokus.hss.web.util.WebConstants;
@@ -109,8 +111,45 @@ class AddSubsFHoSS {
     }
 
     public static int createIMPU(String[] args) {
-        return 0;
-        
+        int id = -1;
+        boolean dbException = false;
+        try{
+            Session session = HibernateUtil.getCurrentSession();
+            HibernateUtil.beginTransaction();
+            IMPU impu = null;
+            String identity = "sip:" + args[0] + "@ims.mnc001.mcc001.3ppnetwork.org";
+            impu = new IMPU();
+            impu.setIdentity(identity);
+            impu.setBarring(1);
+            impu.setType(0);				
+            impu.setWildcard_psi("");
+            impu.setPsi_activation(0);
+            impu.setDisplay_name("");
+            impu.setCan_register(1);
+            impu.setId_sp(1);
+            impu.setId_charging_info(1);
+            IMPU_DAO.insert(session, impu);
+            impu.setId_implicit_set(impu.getId());
+            IMPU_DAO.update(session, impu);
+            id = impu.getId();
+            IMPU_VisitedNetwork impu_vn = new IMPU_VisitedNetwork();
+            impu_vn.setId_impu(id);
+            impu_vn.setId_visited_network(1);
+            IMPU_VisitedNetwork_DAO.insert(session, impu_vn);
+            System.out.println("Added IMPU: " + identity); 
+        }                
+        catch (HibernateException e){
+            logger.error("Hibernate Exception occured!\nReason:" + e.getMessage());
+            e.printStackTrace();
+            dbException = true;
+        }
+        finally{
+            if (!dbException){
+                HibernateUtil.commitTransaction();
+            }
+            HibernateUtil.closeSession();
+        }
+        return id;
     }
 }
 
