@@ -30,10 +30,10 @@ class AddSubsFHoSS {
     public static void main(String[] args) {
         System.out.println("Adding Subscribers to FHoSS ..."); 
         int imsu_id = createIMSU(args);
-        int ipmi_id = createIMPI(args);
-        int impu1_id = createIMPU(args, "sip:" + args[0]);
-        int impu2_id = createIMPU(args, "sip:" + args[0].substring(5));
-        int impu3_id = createIMPU(args, "tel:" + args[1]);
+        int ipmi_id = createIMPI(args, imsu_id);
+        int impu1_id = createIMPU(args, "sip:" + args[0], ipmi_id, 0);
+        int impu2_id = createIMPU(args, "sip:" + args[0].substring(5), ipmi_id, impu1_id);
+        int impu3_id = createIMPU(args, "tel:" + args[1], ipmi_id, impu1_id);
     }
     public static int createIMSU(String[] args) {
         int id = -1;
@@ -66,7 +66,7 @@ class AddSubsFHoSS {
         return id;
     }
 
-    public static int createIMPI(String[] args) {
+    public static int createIMPI(String[] args, int imsu_id) {
         int id = -1;
         boolean dbException = false;
         try{
@@ -99,6 +99,8 @@ class AddSubsFHoSS {
             impi.setLine_identifier("");
             IMPI_DAO.insert(session, impi);
             id = impi.getId();
+            impi.setId_imsu(imsu_id);
+            IMPI_DAO.update(session, impi);
             System.out.println("Added IMPI: " + identity); 
         }                
         catch (HibernateException e){
@@ -115,7 +117,7 @@ class AddSubsFHoSS {
         return id;
     }
 
-    public static int createIMPU(String[] args, String impu_id) {
+    public static int createIMPU(String[] args, String impu_id, Integer impi_id, Integer impu1_id) {
         int id = -1;
         boolean dbException = false;
         try{
@@ -134,13 +136,19 @@ class AddSubsFHoSS {
             impu.setId_sp(1);
             impu.setId_charging_info(1);
             IMPU_DAO.insert(session, impu);
-            impu.setId_implicit_set(impu.getId());
+            if (impu1_id == 0){
+                impu.setId_implicit_set(impu.getId());
+            }
+            else {
+                impu.setId_implicit_set(impu1_id);
+            }
             IMPU_DAO.update(session, impu);
             id = impu.getId();
             IMPU_VisitedNetwork impu_vn = new IMPU_VisitedNetwork();
             impu_vn.setId_impu(id);
             impu_vn.setId_visited_network(1);
             IMPU_VisitedNetwork_DAO.insert(session, impu_vn);
+            IMPI_IMPU_DAO.insert(session, impi_id, id, CxConstants.IMPU_user_state_Not_Registered);
             System.out.println("Added IMPU: " + identity); 
         }                
         catch (HibernateException e){
