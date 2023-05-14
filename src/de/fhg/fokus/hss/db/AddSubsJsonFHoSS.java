@@ -25,9 +25,17 @@ import de.fhg.fokus.hss.db.op.IMPU_DAO;
 import de.fhg.fokus.hss.db.op.IMPU_VisitedNetwork_DAO;
 import de.fhg.fokus.hss.zh.ZhConstants;
 
-// $JAVA_HOME/bin/java -cp $CLASSPATH de.fhg.fokus.hss.web.action.AddSubsFHoSS <id> <k> <amf> <op> <opc> <domain> <msisdn>
-
-// $JAVA_HOME/bin/java -cp $CLASSPATH de.fhg.fokus.hss.web.action.AddSubsFHoSS 001010000000001 00000001 ims.mnc001.mcc001.3ggnetwork.org fec86ba6eb707ed08905757b1bb44b8f 8000 00000000000000000000000000000000 c42449363bbad02b66d16bc975d77cc1
+/*
+*    $JAVA_HOME/bin/java -cp $CLASSPATH de.fhg.fokus.hss.web.action.AddSubsJsonFHoSS
+*
+*    {"subscribers":
+*        [
+*            {"id":"001010000000020", "msisdn": "00000020", "domain": "ims.mnc001.mcc001.3ggnetwork.org", "k": "fec86ba6eb707ed08905757b1bb44b8f", "amf": "8000", "op": "00000000000000000000000000000000", "opc": "c42449363bbad02b66d16bc975d77cc1"},
+*            {"id":"001010000000021", "msisdn": "00000021", "domain": "ims.mnc001.mcc001.3ggnetwork.org", "k": "fec86ba6eb707ed08905757b1bb44b8f", "amf": "8000", "op": "00000000000000000000000000000000", "opc": "c42449363bbad02b66d16bc975d77cc1"},
+*            {"id":"001010000000022", "msisdn": "00000022", "domain": "ims.mnc001.mcc001.3ggnetwork.org", "k": "fec86ba6eb707ed08905757b1bb44b8f", "amf": "8000", "op": "00000000000000000000000000000000", "opc": "c42449363bbad02b66d16bc975d77cc1"}
+*        ]
+*    }
+*/
 
 class AddSubsJsonFHoSS {
     private static Logger logger = Logger.getLogger(AddSubsFHoSS.class);
