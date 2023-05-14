@@ -49,7 +49,7 @@ class AddSubsJsonFHoSS {
         JSONParser jsonParser = new JSONParser();
         JSONObject subsJson = null;
         try {
-            subsJson = (JSONObject) jsonParser.parse(new FileReader("subscribers.json"));
+            subsJson = (JSONObject) jsonParser.parse(new FileReader("/subscribers.json"));
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
