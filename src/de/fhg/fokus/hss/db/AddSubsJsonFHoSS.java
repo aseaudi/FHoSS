@@ -37,7 +37,7 @@ class AddSubsJsonFHoSS {
         for (Object sub : subsJsonArray) {
             JSONObject subJson = (JSONObject) sub;
             int imsu_id = createIMSU(subJson);
-            // int ipmi_id = createIMPI(subJson, imsu_id);
+            int ipmi_id = createIMPI(subJson, imsu_id);
             // int impu1_id = createIMPU(subJson, "sip:" + subJson.get("id"), ipmi_id, 0);
             // int impu2_id = createIMPU(subJson, "sip:" + subJson.get("id").substring(5), ipmi_id, impu1_id);
             // int impu3_id = createIMPU(subJson, "tel:" + subJson.get("msisdn"), ipmi_id, impu1_id);
@@ -60,7 +60,7 @@ class AddSubsJsonFHoSS {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        JSONArray subsJsonArray = (JSONArray) subsJson.get("Subscribers");
+        JSONArray subsJsonArray = (JSONArray) subsJson.get("subscribers");
         return subsJsonArray;
     }
     public static int createIMSU(JSONObject subJson) {
@@ -94,7 +94,7 @@ class AddSubsJsonFHoSS {
         return id;
     }
 
-    public static int createIMPI(String[] args, int imsu_id) {
+    public static int createIMPI(JSONObject subJson, int imsu_id) {
         int id = -1;
         boolean dbException = false;
         try{
@@ -102,11 +102,11 @@ class AddSubsJsonFHoSS {
             HibernateUtil.beginTransaction();
             int auth_scheme = 255;
             IMPI impi;
-            String identity = args[0] + "@" + args[2];
-            String secretKey = args[3];
-            String amf = args[4];
-            String op = args[5];
-            String opc = args[6];
+            String identity = (String) subJson.get("id") + "@" + (String) subJson.get("domain");
+            String secretKey = (String) subJson.get("k");
+            String amf = (String) subJson.get("amf");
+            String op = (String) subJson.get("op");
+            String opc = (String) subJson.get("opc");
             impi = new IMPI();
             impi.setZh_default_auth_scheme(CxConstants.Auth_Scheme_AKAv1);
             impi.setZh_key_life_time(ZhConstants.Default_Key_Life_Time);
@@ -145,14 +145,14 @@ class AddSubsJsonFHoSS {
         return id;
     }
 
-    public static int createIMPU(String[] args, String impu_id, Integer impi_id, Integer impu1_id) {
+    public static int createIMPU(JSONObject subJson, String impu_id, Integer impi_id, Integer impu1_id) {
         int id = -1;
         boolean dbException = false;
         try{
             Session session = HibernateUtil.getCurrentSession();
             HibernateUtil.beginTransaction();
             IMPU impu = null;
-            String identity = impu_id + "@" + args[2];
+            String identity = impu_id + "@" + (String) subJson.get("domain");
             impu = new IMPU();
             impu.setIdentity(identity);
             impu.setBarring(1);
