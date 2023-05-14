@@ -38,9 +38,9 @@ class AddSubsJsonFHoSS {
             JSONObject subJson = (JSONObject) sub;
             int imsu_id = createIMSU(subJson);
             int ipmi_id = createIMPI(subJson, imsu_id);
-            // int impu1_id = createIMPU(subJson, "sip:" + subJson.get("id"), ipmi_id, 0);
-            // int impu2_id = createIMPU(subJson, "sip:" + subJson.get("id").substring(5), ipmi_id, impu1_id);
-            // int impu3_id = createIMPU(subJson, "tel:" + subJson.get("msisdn"), ipmi_id, impu1_id);
+            int impu1_id = createIMPU(subJson, "sip:" + subJson.get("id"), ipmi_id, 0);
+            int impu2_id = createIMPU(subJson, "sip:" + ((String) subJson.get("id")).substring(5), ipmi_id, impu1_id);
+            int impu3_id = createIMPU(subJson, "tel:" + subJson.get("msisdn"), ipmi_id, impu1_id);
         }
 
     }
